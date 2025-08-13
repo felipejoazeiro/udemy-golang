@@ -1,9 +1,18 @@
 package main
 
+import (
+	"encoding/base64"
+	"fmt"
+	"log"
+	"math/rand"
+	"time"
+)
+
 func main() {
 	config.Carregar()
 	fmt.Println(config.StringConexaoBanco)
 
+	fmt.Println(config.SecretKey)
 
 	fmt.Println("Rodando a API")
 	r := router.Gerar()

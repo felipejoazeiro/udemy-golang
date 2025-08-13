@@ -30,6 +30,10 @@ func (usuario *Usuario) validar() error {
 		return erros.New("O Email é obrigatório e não pode estar em branco")
 	}
 
+	if erro := checkmail.ValidateFormat(usuario.Email); erro != nil {
+		return erros.New("O Email é inválido")
+	}
+
 	if usuario.Senha == "" {
 		return erros.New("O Senha é obrigatório e não pode estar em branco")
 	}
@@ -37,10 +41,19 @@ func (usuario *Usuario) validar() error {
 	return nil
 }
 
-func (usuario *Usuario) formatar() {
+
+func (usuario *Usuario) formatar(etapa string) error {
 	usuario.Nome = strings.TrimSpace(usuario.Nome)
 	usuario.Nick = strings.TrimSpace(usuario.Nick)
 	usuario.Email = strings.TrimSpace(usuario.Email)
 	usuario.Senha = strings.TrimSpace(usuario.Senha)
 
+	if etapa == "cadastro" {
+		senhaComHash, erro := seguranca.Hash(usuario.Senha)
+		if erro != nil {
+			return erro
+		}
+		usuario.Senha = string(senhaComHash)
+	}
+	return nil
 }
